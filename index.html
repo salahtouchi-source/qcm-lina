@@ -1,0 +1,61 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QCM de Lina – SVT 4e</title><style>body{font:17px system-ui;background:#f2f6fa;color:#18324b;margin:0}main{max-width:820px;margin:auto;padding:22px}section{background:white;border-radius:16px;padding:24px;margin:16px 0;box-shadow:0 3px 12px #ccd5df}button,select{padding:12px;border:1px solid #9db4c8;border-radius:10px;font:inherit;cursor:pointer}button{background:#1767a5;color:white}button:disabled{opacity:.5}.answers button{display:block;width:100%;text-align:left;background:#f1f7fc;color:#17334d;margin:9px 0}.answers button.selected{background:#b9e0ff}.diagram{background:#eef7fc;border-radius:12px;padding:18px;text-align:center;font-size:48px}.muted{color:#526c7e}.hidden{display:none}</style></head><body><main><h1>🌍 Les QCM de Lina</h1><p>SVT 4e · La Terre active · 50 questions · 8 thèmes</p><section id="start"><label>Thème : <select id="theme"><option value="-1">Tous les sous-chapitres</option></select></label><p><label><input type="checkbox" id="course" checked> Afficher le mini-cours avant chaque question</label></p><button onclick="begin()">Commencer le QCM</button></section><section id="quiz" class="hidden"><p id="progress"></p><h2 id="title"></h2><div class="diagram" id="diagram"></div><p id="lesson"></p><h3 id="question"></h3><div id="answers" class="answers"></div><button id="next" onclick="advance()" disabled>Question suivante →</button></section><section id="result" class="hidden"></section></main><script>
+const topics=[
+["Structure interne de la Terre","🌍","La Terre est formée de couches : croûte, manteau et noyau. La lithosphère rigide comprend la croûte et la partie supérieure du manteau.",[
+["Quelle couche est la plus externe ?","La croûte","Le noyau","Le manteau"],
+["Quel est le centre de la Terre ?","Le noyau","La croûte","La lithosphère"],
+["La lithosphère est principalement…","Rigide","Liquide","Gazeuse"],
+["Le manteau se situe…","Entre croûte et noyau","Au-dessus de l'atmosphère","Au centre du noyau"],
+["La lithosphère comprend…","La croûte et le haut du manteau","Le noyau seul","L'atmosphère"],
+["La Terre possède…","Plusieurs enveloppes concentriques","Une seule couche","Un intérieur entièrement liquide"]]],
+["Plaques tectoniques","🧩","La lithosphère est découpée en plaques mobiles. Leur déplacement est très lent, généralement de quelques centimètres par an.",[
+["Les plaques tectoniques sont des morceaux de…","Lithosphère","Noyau","Atmosphère"],
+["Les plaques se déplacent…","De quelques centimètres par an","De kilomètres par jour","Jamais"],
+["Une limite de plaques correspond à…","Une frontière entre deux plaques","Une frontière politique","Un climat"],
+["Les continents…","Peuvent être transportés par les plaques","Restent toujours immobiles","Flottent dans l'air"],
+["Le mouvement des plaques est mesurable par…","GPS","Thermomètre","Pluviomètre"],
+["Une plaque peut porter…","Des continents et des océans","Seulement des villes","Seulement de l'air"]]],
+["Séismes","📈","Un séisme résulte d'une rupture brutale des roches en profondeur. Les ondes partent du foyer ; l'épicentre est le point en surface à sa verticale.",[
+["Où commence un séisme ?","Au foyer","À l'épicentre","Dans l'atmosphère"],
+["L'épicentre est…","À la surface, à la verticale du foyer","Le centre du noyau","Une plaque entière"],
+["Les vibrations sont propagées par…","Les ondes sismiques","Le vent","La pluie"],
+["Un sismomètre mesure…","Les mouvements du sol","La température du magma","La vitesse du vent"],
+["Les séismes se concentrent surtout…","Aux limites des plaques","Uniquement aux pôles","Uniformément partout"],
+["Une faille est…","Une fracture de la roche","Un type de nuage","Une rivière"],
+["La magnitude caractérise…","La taille d'un séisme","La durée d'une journée","La profondeur des océans"]]],
+["Volcanisme","🌋","Le magma est de la roche fondue en profondeur. Lorsqu'il arrive à la surface, on parle de lave. Les éruptions peuvent être effusives ou explosives.",[
+["À la surface, le magma devient…","De la lave","De la glace","Du granite intact"],
+["Une éruption effusive produit surtout…","Des coulées de lave","Des séismes uniquement","De la neige"],
+["Une éruption explosive peut produire…","Des cendres et projections","Seulement de l'eau","Aucun gaz"],
+["Le magma se trouve initialement…","En profondeur","Dans les nuages","À la surface des océans"],
+["Les gaz peuvent contribuer…","À la violence des éruptions","À stopper la tectonique","À former le noyau"],
+["Un volcan actif…","Peut entrer en éruption","Est toujours en éruption","Ne peut plus se réveiller"]]],
+["Divergence","↔️","À une dorsale océanique, deux plaques s'écartent. Du magma remonte et forme de la nouvelle lithosphère océanique.",[
+["À une dorsale, les plaques…","S'écartent","Se rapprochent","Ne bougent pas"],
+["La divergence crée…","De la lithosphère océanique","Un nouveau noyau","De l'atmosphère"],
+["Les dorsales se trouvent surtout…","Au fond des océans","Au centre des continents uniquement","Dans le ciel"],
+["Le magma remonte à la dorsale car…","Les plaques s'écartent","Le noyau sort","La pluie pénètre"],
+["La formation du plancher océanique est appelée…","Accrétion océanique","Érosion éolienne","Condensation"],
+["Les roches les plus jeunes sont généralement…","Près de la dorsale","Toujours sur les continents","Près des fosses uniquement"]]],
+["Convergence","↘️","À la convergence, les plaques se rapprochent. En subduction, une plaque plonge sous une autre ; en collision continentale, des montagnes peuvent se former.",[
+["La convergence signifie…","Le rapprochement des plaques","Leur éloignement","Leur immobilité"],
+["En subduction, une plaque…","Plonge sous une autre","Disparaît dans l'espace","Devient un nuage"],
+["Une collision continentale peut former…","Une chaîne de montagnes","Une étoile","Un cyclone"],
+["Une fosse océanique peut indiquer…","Une zone de subduction","Une dorsale","Un désert"],
+["La subduction peut provoquer…","Séismes et volcanisme","Uniquement de la pluie","Aucun phénomène"],
+["L'Himalaya résulte principalement…","D'une collision continentale","D'une dorsale océanique","D'un cyclone"]]],
+["Répartition des phénomènes","🗺️","La plupart des séismes et volcans sont répartis en bandes qui suivent les frontières des plaques. La ceinture de feu borde une grande partie du Pacifique.",[
+["La plupart des séismes suivent…","Les limites des plaques","Les frontières des pays","Les fleuves"],
+["La ceinture de feu entoure principalement…","L'océan Pacifique","L'océan Arctique","La mer Caspienne"],
+["Les cartes de séismes servent à…","Repérer les frontières de plaques","Prévoir chaque date exacte","Mesurer la pluie"],
+["Les dorsales présentent souvent…","Séismes et volcanisme","Aucun mouvement","Seulement des tornades"],
+["Les volcans sont-ils tous aux limites des plaques ?","Non, il existe des points chauds","Oui, sans exception","Seulement aux pôles"],
+["Les séismes profonds sont caractéristiques…","De certaines zones de subduction","Des plaines sans faille","Des nuages"]]],
+["Risques naturels","🛡️","Le risque dépend de l'aléa naturel et de l'exposition des populations. Les constructions adaptées, la surveillance et les consignes de sécurité réduisent les conséquences.",[
+["Peut-on prédire la date exacte d'un séisme ?","Non","Oui, toujours","Avec un thermomètre"],
+["Une construction parasismique vise à…","Réduire les dégâts","Empêcher les plaques de bouger","Supprimer les volcans"],
+["La surveillance d'un volcan peut utiliser…","Des mesures de déformation et de gaz","Uniquement la météo","Les marées uniquement"],
+["Le risque est plus élevé lorsque…","Des populations sont exposées","Personne n'habite la zone","Il n'existe aucun aléa"],
+["Lors d'un séisme à l'intérieur, il faut généralement…","Se protéger des chutes d'objets","Prendre l'ascenseur","Courir vers les fenêtres"],
+["Un plan d'évacuation sert à…","Organiser la mise en sécurité","Prédire la date du séisme","Arrêter la lave"],
+["La prévention permet…","De limiter les conséquences","D'empêcher toute activité terrestre","De supprimer toutes les failles"]]]
+];let items=[],idx=0,score=0,chosen=null;topics.forEach((t,i)=>document.getElementById("theme").innerHTML+='<option value="'+i+'">'+(i+1)+'. '+t[0]+'</option>');function begin(){let t=+document.getElementById("theme").value;items=topics.flatMap((v,i)=>(t===-1||t===i)?v[3].map(q=>({t:v,q})):[]);idx=0;score=0;document.getElementById("start").classList.add("hidden");document.getElementById("result").classList.add("hidden");document.getElementById("quiz").classList.remove("hidden");show()}function show(){chosen=null;let {t,q}=items[idx];document.getElementById("progress").textContent="Question "+(idx+1)+" / "+items.length;document.getElementById("title").textContent=t[0];document.getElementById("diagram").textContent=t[1];document.getElementById("lesson").textContent=document.getElementById("course").checked?"📖 À retenir : "+t[2]:"";document.getElementById("question").textContent=q[0];let opts=q.slice(1).map((v,i)=>({v,correct:i===0})).sort(()=>Math.random()-.5);document.getElementById("answers").innerHTML="";opts.forEach(o=>{let b=document.createElement("button");b.textContent=o.v;b.onclick=()=>{chosen=o.correct;document.querySelectorAll(".answers button").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");document.getElementById("next").disabled=false};document.getElementById("answers").appendChild(b)});document.getElementById("next").disabled=true;document.getElementById("next").textContent=idx===items.length-1?"Voir ma note":"Question suivante →"}function advance(){if(chosen)score++;idx++;if(idx<items.length)show();else{document.getElementById("quiz").classList.add("hidden");let r=document.getElementById("result");r.classList.remove("hidden");r.innerHTML="<h2>Résultat : "+(20*score/items.length).toFixed(1)+"/20</h2><p>"+score+" bonnes réponses sur "+items.length+".</p><button onclick='location.reload()'>Recommencer</button>"}}</script></body></html>
